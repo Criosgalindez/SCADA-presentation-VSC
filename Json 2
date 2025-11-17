@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "python",
+    "code-runner.runInTerminal": true,
+    "code-runner.saveFileBeforeRun": true,
+    "python.terminal.activateEnvironment": false
+}
