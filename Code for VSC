@@ -1,0 +1,1013 @@
+mport pygame
+import sys
+import math
+from pygame.locals import *
+
+# Inicializar pygame
+pygame.init()
+
+# Configuración optimizada
+WIDTH, HEIGHT = 1200, 700
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("SCADA - Presentación Completa")
+
+# Colores
+BACKGROUND = (245, 248, 250)
+BLUE_DARK = (0, 51, 102)
+BLUE_LIGHT = (0, 102, 204)
+WHITE = (255, 255, 255)
+BLACK = (30, 30, 30)
+GRAY = (120, 120, 120)
+GREEN = (76, 175, 80)
+RED = (244, 67, 54)
+YELLOW = (255, 193, 7)
+ORANGE = (255, 152, 0)
+PURPLE = (156, 39, 176)
+CYAN = (0, 188, 212)
+
+# Fuentes
+try:
+    title_font = pygame.font.SysFont('arial', 44, bold=True)
+    slide_title_font = pygame.font.SysFont('arial', 32, bold=True)
+    content_font = pygame.font.SysFont('arial', 22)
+    bullet_font = pygame.font.SysFont('arial', 20)
+    footer_font = pygame.font.SysFont('arial', 16)
+except:
+    title_font = pygame.font.Font(None, 44)
+    slide_title_font = pygame.font.Font(None, 32)
+    content_font = pygame.font.Font(None, 22)
+    bullet_font = pygame.font.Font(None, 20)
+    footer_font = pygame.font.Font(None, 16)
+
+class Transition:
+    def __init__(self):
+        self.alpha = 0
+        self.direction = 1
+        self.active = False
+        self.speed = 12
+    
+    def start(self):
+        self.active = True
+        self.alpha = 0
+        self.direction = 1
+    
+    def update(self):
+        if not self.active:
+            return False
+        
+        self.alpha += self.direction * self.speed
+        
+        if self.direction == 1 and self.alpha >= 255:
+            self.alpha = 255
+            self.direction = -1
+            return True
+        elif self.direction == -1 and self.alpha <= 0:
+            self.alpha = 0
+            self.active = False
+            return True
+        
+        return False
+    
+    def draw(self, screen):
+        if self.active:
+            fade_surface = pygame.Surface((WIDTH, HEIGHT))
+            fade_surface.fill((255, 255, 255))
+            fade_surface.set_alpha(self.alpha)
+            screen.blit(fade_surface, (0, 0))
+
+class PresentationManager:
+    def __init__(self):
+        self.slides = self.create_complete_slides()
+        self.current_slide = 0
+        self.animation_progress = 0
+        self.transition = Transition()
+    
+    def create_complete_slides(self):
+        return [
+            # === PORTADA ===
+            {
+                "type": "cover",
+                "title": "Sistemas SCADA",
+                "subtitle": "Presentación Técnica Completa",
+                "section": "Introducción",
+                "author": "Alberto Fernandez y Carlos Ríos"
+            },
+            
+            # === AGENDA ===
+            {
+                "type": "agenda",
+                "title": "Agenda de la Presentación",
+                "section": "Estructura",
+                "topics": [
+                    "Definición y Conceptos SCADA",
+                    "Arquitectura y Componentes", 
+                    "Protocolos de Comunicación",
+                    "Aplicaciones por Sector",
+                    "Ciberseguridad Industrial",
+                    "Tendencias y Futuro",
+                    "Implementación y ROI"
+                ]
+            },
+            
+            # === DEFINICIÓN SCADA ===
+            {
+                "type": "definition",
+                "title": "¿Qué es SCADA?",
+                "section": "Conceptos Fundamentales",
+                "acronym": "Supervisory Control and Data Acquisition",
+                "definition": "Sistema integral para supervisar, controlar y adquirir datos de procesos industriales",
+                "key_points": [
+                    "Supervisión: Monitoreo en tiempo real",
+                    "Control: Operación remota centralizada", 
+                    "Adquisición: Recolección masiva de datos",
+                    "Automatización: Reducción intervención humana"
+                ]
+            },
+            
+                        # === HISTORIA SCADA ===
+            {
+                "type": "history",
+                "title": "Evolución Histórica de SCADA",
+                "section": "Línea de Tiempo",
+                "eras": [
+                    ("1960s", "Sistemas Monolíticos", "Mainframes centralizados", BLUE_DARK),
+                    ("1970s", "Primeros SCADA", "Concepto nace", BLUE_LIGHT),
+                    ("1980s", "Arquitecturas Distribuidas", "Redes LAN", GREEN),
+                    ("1990s", "SCADA en Red", "Protocolos estandarizados", YELLOW),
+                    ("2000s", "Web SCADA", "Acceso browser", ORANGE),
+                    ("2010s+", "SCADA IIoT", "Cloud y Analytics", PURPLE)
+                ]
+            },
+            
+            # === ARQUITECTURA PURDUE ===
+            {
+                "type": "architecture",
+                "title": "Arquitectura por Niveles",
+                "section": "Modelo Purdue/ISA-95",
+                "levels": [
+                    ("Nivel 4 - ERP", "Planificación Empresarial", "Gestión corporativa y negocio", BLUE_DARK),
+                    ("Nivel 3 - MES", "Sistemas Ejecución Manufactura", "Optimización producción", BLUE_LIGHT),
+                    ("Nivel 2 - SCADA", "Supervisión y Control", "Monitoreo operacional", GREEN),
+                    ("Nivel 1 - Control", "PLCs y RTUs", "Control automático local", YELLOW),
+                    ("Nivel 0 - Proceso", "Sensores y Actuadores", "Interacción física directa", RED)
+                ]
+            },
+            
+            # === COMPONENTES HARDWARE ===
+            {
+                "type": "hardware",
+                "title": "Componentes Hardware",
+                "section": "Infraestructura Física",
+                "components": [
+                    ("Servidores SCADA", "Procesamiento central", "Alta disponibilidad", BLUE_LIGHT),
+                    ("Estaciones Operador", "Interfaz HMI", "Múltiples monitores", GREEN),
+                    ("PLCs", "Control lógico programable", "Tiempo real", YELLOW),
+                    ("RTUs", "Unidades terminales remotas", "Ubicaciones críticas", RED),
+                    ("Network Switches", "Comunicación industrial", "Redundancia", PURPLE)
+                ]
+            },
+            
+            # === COMPONENTES SOFTWARE ===
+            {
+                "type": "software",
+                "title": "Componentes Software", 
+                "section": "Plataforma de Aplicación",
+                "components": [
+                    ("Sistema Operativo", "Windows/Linux RT", "Plataforma base", BLUE_LIGHT),
+                    ("Software SCADA", "Aplicación principal", "Desarrollo personalizado", GREEN),
+                    ("Bases de Datos", "Históricos y tiempo real", "SQL, Oracle", YELLOW),
+                    ("Herramientas Desarrollo", "Editores y configuradores", "Entornos gráficos", ORANGE),
+                    ("Aplicaciones Cliente", "Visualización web/móvil", "Acceso multiplataforma", PURPLE)
+                ]
+            },
+            
+            # === HMI DETALLADO ===
+            {
+                "type": "hmi",
+                "title": "HMI - Interfaz Hombre-Máquina",
+                "section": "Componente Clave",
+                "role": "Interfaz visual entre operadores y procesos industriales",
+                "features": [
+                    "Visualización gráfica en tiempo real de procesos completos",
+                    "Control manual y automático de equipos críticos", 
+                    "Gestión inteligente de alarmas con priorización",
+                    "Tendencias históricas y análisis comparativos",
+                    "Reportes automáticos de producción y eventos"
+                ],
+                "benefits": "Centralización operacional y reducción de errores humanos"
+            },
+            
+            # === RTU DETALLADO ===
+            {
+                "type": "rtu",
+                "title": "RTU - Unidad Terminal Remota", 
+                "section": "Componente Clave",
+                "function": "Recolección y transmisión inteligente de datos en ubicaciones distribuidas",
+                "capabilities": [
+                    "Adquisición de datos desde múltiples sensores simultáneamente",
+                    "Procesamiento local con lógica programable avanzada",
+                    "Comunicación con protocolos industriales múltiples",
+                    "Funcionamiento autónomo en condiciones ambientales extremas",
+                    "Almacenamiento local de datos ante fallos de comunicación"
+                ],
+                "applications": "Pozos remotos, subestaciones, plantas distribuidas"
+            },
+            
+            # === PLC DETALLADO ===
+            {
+                "type": "plc",
+                "title": "PLC - Controlador Lógico Programable",
+                "section": "Componente Clave", 
+                "purpose": "Ejecución de lógica de control en tiempo real determinístico",
+                "characteristics": [
+                    "Tiempo real estricto para aplicaciones críticas de seguridad",
+                    "Programación bajo estándar internacional IEC 61131-3",
+                    "Arquitecturas redundantes hot-standby para alta disponibilidad",
+                    "Comunicación industrial robusta con inmunidad a interferencias",
+                    "Capacidad de manejar E/S digitales y analógicas complejas"
+                ],
+                "programming": "Ladder Logic, Function Block, Structured Text"
+            },
+            
+            # === PROTOCOLOS CLÁSICOS ===
+            {
+                "type": "protocols_classic",
+                "title": "Protocolos Clásicos",
+                "section": "Comunicaciones Industriales",
+                "protocols": [
+                    ("Modbus RTU/TCP", "Protocolo abierto más utilizado", "Simple, amplio soporte", BLUE_LIGHT),
+                    ("Profibus DP/PA", "Alemania, amplio en Europa", "Determinístico, rápido", GREEN),
+                    ("DeviceNet", "Rockwell Automation", "Cableado simplificado", YELLOW),
+                    ("Foundation Fieldbus", "Protocolo de campo", "Capacidades avanzadas", ORANGE)
+                ]
+            },
+            
+            # === PROTOCOLOS MODERNOS ===
+            {
+                "type": "protocols_modern",
+                "title": "Protocolos Modernos",
+                "section": "Comunicaciones Avanzadas", 
+                "protocols": [
+                    ("OPC UA", "Estándar Industria 4.0", "Seguro, interoperable", PURPLE),
+                    ("EtherNet/IP", "Ethernet industrial", "Amplia adopción", CYAN),
+                    ("PROFINET", "Ethernet en tiempo real", "Alto desempeño", BLUE_LIGHT),
+                    ("MQTT Sparkplug", "IIoT optimizado", "Ligero, eficiente", GREEN)
+                ]
+            },
+            
+            # === SECTOR ENERGÉTICO ===
+            {
+                "type": "energy",
+                "title": "Aplicación: Sector Energético",
+                "section": "Casos de Uso",
+                "overview": "Control y monitorización de redes eléctricas inteligentes",
+                "functions": [
+                    "Gestión automática de generación y distribución",
+                    "Protección y reconfiguración automática del sistema",
+                    "Control de calidad de energía y factores de potencia",
+                    "Optimización de flujos de potencia en tiempo real",
+                    "Restauración automática post-cortes y fallos"
+                ],
+                "benefits": "45% reducción tiempo interrupciones • 25% menos pérdidas"
+            },
+            
+            # === SECTOR AGUA ===
+            {
+                "type": "water",
+                "title": "Aplicación: Gestión de Agua", 
+                "section": "Casos de Uso",
+                "overview": "Control integral de plantas de tratamiento y redes de distribución",
+                "functions": [
+                    "Control automático de bombas, válvulas y dosificadores",
+                    "Dosificación precisa de productos químicos según calidad",
+                    "Monitorización continua de parámetros de calidad de agua",
+                    "Detección temprana y localización de fugas en la red", 
+                    "Optimización del consumo energético en operaciones"
+                ],
+                "benefits": "20% ahorro energético • 25% reducción pérdidas agua"
+            },
+            
+            # === SECTOR MANUFACTURA ===
+            {
+                "type": "manufacturing",
+                "title": "Aplicación: Manufactura",
+                "section": "Casos de Uso", 
+                "overview": "Automatización y optimización de procesos productivos",
+                "functions": [
+                    "Control sincronizado de líneas de ensamblaje complejas",
+                    "Monitorización de parámetros de robots y CNC",
+                    "Gestión de calidad en línea con retroalimentación automática",
+                    "Optimización de OEE (Overall Equipment Effectiveness)",
+                    "Mantenimiento predictivo basado en condiciones operativas"
+                ],
+                "benefits": "8-12 puntos mejora OEE • 30% reducción downtime"
+            },
+            
+            # === CIBERSEGURIDAD AMENAZAS ===
+            {
+                "type": "security_threats",
+                "title": "Ciberseguridad: Amenazas",
+                "section": "Protección Industrial", 
+                "challenge": "Vulnerabilidades en infraestructura crítica operacional",
+                "threats": [
+                    ("67%", "Arquitecturas de red planas", "Falta segmentación lógica", RED),
+                    ("45%", "Autenticación débil o inexistente", "Credenciales por defecto", ORANGE), 
+                    ("58%", "Sistemas operativos legados", "Sin soporte de seguridad", YELLOW),
+                    ("72%", "Acceso remoto no seguro", "Conexiones sin cifrar", BLUE_LIGHT)
+                ]
+            },
+            
+            # === CIBERSEGURIDAD SOLUCIONES ===
+            {
+                "type": "security_solutions",
+                "title": "Ciberseguridad: Soluciones",
+                "section": "Estrategias de Protección",
+                "approach": "Defensa en profundidad para entornos OT/IT",
+                "solutions": [
+                    ("Segmentación", "DMZ industriales y zonas", "Contención de brechas", GREEN),
+                    ("Monitorización", "IDS/IPS específicos OT", "Detección temprana", BLUE_LIGHT),
+                    ("Hardening", "Endurecimiento sistemas", "Reducción superficie ataque", YELLOW),
+                    ("Respuesta", "Planes recuperación", "Minimización impacto", ORANGE)
+                ]
+            },
+            
+            # === TENDENCIAS IIOT ===
+            {
+                "type": "trends_iiot",
+                "title": "Tendencia: IIoT e Industria 4.0",
+                "section": "Futuro SCADA", 
+                "vision": "Integración con Internet Industrial de las Cosas",
+                "innovations": [
+                    "Conectividad masiva de dispositivos inteligentes",
+                    "Analítica avanzada con machine learning operacional",
+                    "Computación en la nube híbrida y edge computing",
+                    "Digital Twins para simulación y optimización",
+                    "Mantenimiento predictivo y prescriptivo automático"
+                ],
+                "impact": "Transformación digital de operaciones industriales"
+            },
+            
+            # === TENDENCIAS AI ===
+            {
+                "type": "trends_ai",
+                "title": "Tendencia: Inteligencia Artificial",
+                "section": "Futuro SCADA",
+                "application": "AI/ML en sistemas de control y supervisión",
+                "capabilities": [
+                    "Detección automática de anomalías y patrones complejos",
+                    "Optimización de procesos en tiempo real adaptativa", 
+                    "Predicción de fallos con alta precisión estadística",
+                    "Control autónomo con aprendizaje por refuerzo",
+                    "Recomendaciones operativas basadas en datos históricos"
+                ],
+                "benefit": "Toma de decisiones inteligente y autónoma"
+            },
+            
+            # === IMPLEMENTACIÓN ===
+            {
+                "type": "implementation",
+                "title": "Estrategias de Implementación",
+                "section": "Proyectos SCADA", 
+                "methodology": "Enfoque estructurado para despliegue exitoso",
+                "phases": [
+                    ("Análisis Requisitos", "Definición alcance y objetivos", "Documentación detallada", BLUE_LIGHT),
+                    ("Diseño Arquitectura", "Selección componentes y protocolos", "Planificación técnica", GREEN),
+                    ("Desarrollo", "Programación y configuración", "Pruebas unitarias", YELLOW),
+                    ("Pruebas Integración", "Validación sistema completo", "Aseguramiento calidad", ORANGE),
+                    ("Despliegue Producción", "Puesta en marcha gradual", "Soporte post-implementación", PURPLE)
+                ]
+            },
+            
+            # === ROI Y BENEFICIOS ===
+            {
+                "type": "roi",
+                "title": "ROI y Beneficios Cuantificables",
+                "section": "Justificación Económica",
+                "analysis": "Retorno de inversión en implementaciones SCADA",
+                "metrics": [
+                    ("Año 1", "ROI 1.5x", "Reducción costos operativos", GREEN),
+                    ("Año 2", "ROI 2.2x", "Mejora productividad", BLUE_LIGHT),
+                    ("Año 3", "ROI 3.1x", "Optimización recursos", YELLOW),
+                    ("Año 5", "ROI 4.1x", "Beneficios acumulados", ORANGE)
+                ],
+                "conclusion": "Inversión recuperada típicamente en 18-24 meses"
+            },
+            
+            # === CONCLUSIONES ===
+            {
+                "type": "conclusion",
+                "title": "Conclusiones y Recomendaciones", 
+                "section": "Resumen Ejecutivo",
+                "key_points": [
+                    "SCADA es componente crítico para competitividad industrial moderna",
+                    "La evolución hacia plataformas IIoT e inteligentes es irreversible",
+                    "La ciberseguridad debe ser considerada desde la fase de diseño",
+                    "Los beneficios operativos y económicos justifican ampliamente la inversión",
+                    "La capacitación continua del personal es clave para el éxito operacional"
+                ],
+                "recommendation": "Adoptar arquitecturas abiertas, seguras y escalables"
+            },
+            
+            # === FINAL ===
+            {
+                "type": "final",
+                "title": "¡Gracias por su Atención!",
+                "section": "Fin de Presentación",
+                "contact": "¿Preguntas o Comentarios?",
+                "footer": "Presentación SCADA Completa - Investigación Actualizada 2024"
+            }
+        ]
+    
+    def next_slide(self):
+        if self.current_slide < len(self.slides) - 1:
+            self.current_slide += 1
+            self.animation_progress = 0
+            self.transition.start()
+    
+    def prev_slide(self):
+        if self.current_slide > 0:
+            self.current_slide -= 1
+            self.animation_progress = 0
+            self.transition.start()
+    
+    def update_animation(self):
+        self.animation_progress = min(self.animation_progress + 0.02, 1.0)
+        self.transition.update()
+
+def draw_background(screen, section=None):
+    screen.fill(BACKGROUND)
+    
+    # Header con sección
+    if section:
+        header_surface = footer_font.render(section, True, BLUE_LIGHT)
+        screen.blit(header_surface, (50, 20))
+    
+    # Línea decorativa
+    pygame.draw.line(screen, BLUE_DARK, (0, 50), (WIDTH, 50), 2)
+
+def draw_navigation(screen, current, total):
+    # Barra de progreso
+    progress_width = (WIDTH - 200) * (current + 1) / total
+    pygame.draw.rect(screen, BLUE_LIGHT, (100, HEIGHT - 30, progress_width, 6))
+    pygame.draw.rect(screen, GRAY, (100, HEIGHT - 30, WIDTH - 200, 6), 1)
+    
+    # Navegación
+    nav_text = f"← Anterior  → Siguiente  ESC Salir  [{current + 1}/{total}]"
+    nav_surface = footer_font.render(nav_text, True, GRAY)
+    screen.blit(nav_surface, (WIDTH//2 - nav_surface.get_width()//2, HEIGHT - 50))
+
+def draw_cover(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = title_font.render(slide["title"], True, BLUE_DARK)
+    title_rect = title_surface.get_rect(center=(WIDTH//2, HEIGHT//3))
+    screen.blit(title_surface, title_rect)
+    
+    subtitle_surface = slide_title_font.render(slide["subtitle"], True, BLUE_LIGHT)
+    subtitle_rect = subtitle_surface.get_rect(center=(WIDTH//2, HEIGHT//3 + 60))
+    screen.blit(subtitle_surface, subtitle_rect)
+    
+    author_surface = content_font.render(slide["author"], True, BLACK)
+    author_rect = author_surface.get_rect(center=(WIDTH//2, HEIGHT//2))
+    screen.blit(author_surface, author_rect)
+
+def draw_agenda(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Temas de agenda
+    y_pos = 140
+    for i, topic in enumerate(slide["topics"]):
+        # Número
+        pygame.draw.circle(screen, BLUE_LIGHT, (100, y_pos + 15), 20)
+        num_surface = content_font.render(str(i+1), True, WHITE)
+        screen.blit(num_surface, (100 - num_surface.get_width()//2, y_pos + 15 - num_surface.get_height()//2))
+        
+        # Tema
+        topic_surface = bullet_font.render(topic, True, BLACK)
+        screen.blit(topic_surface, (140, y_pos))
+        
+        y_pos += 60
+
+def draw_definition(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Acrónimo
+    acronym_surface = content_font.render(slide["acronym"], True, GREEN)
+    screen.blit(acronym_surface, (100, 120))
+    
+    # Definición
+    def_surface = bullet_font.render(slide["definition"], True, BLACK)
+    screen.blit(def_surface, (100, 160))
+    
+    # Puntos clave
+    y_pos = 210
+    for point in slide["key_points"]:
+        pygame.draw.circle(screen, BLUE_LIGHT, (80, y_pos + 12), 6)
+        point_surface = bullet_font.render(point, True, BLACK)
+        screen.blit(point_surface, (100, y_pos))
+        y_pos += 40
+
+def draw_history(screen, slide, progress):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (WIDTH//2 - title_surface.get_width()//2, 70))
+    
+    # Subtítulo evolutivo
+    subtitle_text = "Sistemas Monolíticos → Primeros SCADA → Arquitecturas Distribuidas → SCADA en Red"
+    subtitle_surface = content_font.render(subtitle_text, True, BLUE_LIGHT)
+    screen.blit(subtitle_surface, (WIDTH//2 - subtitle_surface.get_width()//2, 120))
+    
+    # Línea de tiempo principal
+    timeline_y = HEIGHT//2 - 50
+    timeline_start = 100
+    timeline_end = WIDTH - 100
+    pygame.draw.line(screen, BLACK, (timeline_start, timeline_y), (timeline_end, timeline_y), 3)
+    
+    # Dibujar eras en la línea de tiempo
+    eras_count = len(slide["eras"])
+    spacing = (timeline_end - timeline_start) / (eras_count - 1) if eras_count > 1 else 0
+    
+    for i, (era, name, description, color) in enumerate(slide["eras"]):
+        x_pos = timeline_start + i * spacing
+        anim_progress = min(1.0, progress * 2 - i * 0.3)
+        
+        if anim_progress > 0:
+            # Punto en la línea de tiempo
+            point_radius = 15
+            pygame.draw.circle(screen, color, (x_pos, timeline_y), point_radius)
+            pygame.draw.circle(screen, WHITE, (x_pos, timeline_y), point_radius - 3)
+            
+            # Era (años) - encima de la línea
+            era_surface = bullet_font.render(era, True, color)
+            era_rect = era_surface.get_rect(center=(x_pos, timeline_y - 40))
+            screen.blit(era_surface, era_rect)
+            
+            # Nombre de la era - debajo de la línea
+            name_surface = bullet_font.render(name, True, BLACK)
+            name_rect = name_surface.get_rect(center=(x_pos, timeline_y + 30))
+            screen.blit(name_surface, name_rect)
+            
+            # Descripción - aparece con animación, más abajo
+            if anim_progress > 0.5:
+                # Fondo para mejor legibilidad
+                desc_surface = footer_font.render(description, True, BLACK)
+                desc_rect = desc_surface.get_rect(center=(x_pos, timeline_y + 60))
+                
+                # Dibujar fondo semi-transparente
+                bg_rect = pygame.Rect(
+                    desc_rect.left - 10, 
+                    desc_rect.top - 5, 
+                    desc_rect.width + 20, 
+                    desc_rect.height + 10
+                )
+                bg_surface = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)
+                bg_surface.fill((255, 255, 255, 200))  # Blanco semi-transparente
+                screen.blit(bg_surface, bg_rect)
+                pygame.draw.rect(screen, color, bg_rect, 1, 3)  # Borde redondeado
+                
+                screen.blit(desc_surface, desc_rect)
+    
+    # Leyenda explicativa adicional en la parte inferior
+    if progress > 0.7:
+        legend_y = HEIGHT - 100
+        legend_texts = [
+            "SCADA ha evolucionado desde sistemas centralizados hasta plataformas IIoT distribuidas",
+            "Cada década ha traído avances significativos en conectividad y capacidades"
+        ]
+        
+        for i, text in enumerate(legend_texts):
+            legend_surface = footer_font.render(text, True, GRAY)
+            screen.blit(legend_surface, (WIDTH//2 - legend_surface.get_width()//2, legend_y + i * 25))
+
+def draw_architecture(screen, slide, progress):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Niveles
+    level_height = 70
+    start_y = 130
+    
+    for i, (level, name, description, color) in enumerate(slide["levels"]):
+        y_pos = start_y + i * level_height
+        current_width = (WIDTH - 200) * progress
+        
+        # Nivel
+        pygame.draw.rect(screen, color, (100, y_pos, current_width, level_height - 10), 0, 5)
+        pygame.draw.rect(screen, BLACK, (100, y_pos, current_width, level_height - 10), 1, 5)
+        
+        # Texto
+        level_text = bullet_font.render(f"{level}: {name}", True, WHITE)
+        desc_text = footer_font.render(description, True, WHITE)
+        
+        screen.blit(level_text, (120, y_pos + 10))
+        screen.blit(desc_text, (120, y_pos + 35))
+
+def draw_component_grid(screen, slide, component_type):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Componentes
+    y_pos = 130
+    for name, description, details, color in slide["components"]:
+        # Tarjeta
+        pygame.draw.rect(screen, color, (80, y_pos, WIDTH - 160, 70), 0, 8)
+        pygame.draw.rect(screen, BLACK, (80, y_pos, WIDTH - 160, 70), 1, 8)
+        
+        # Nombre
+        name_surface = content_font.render(name, True, WHITE)
+        screen.blit(name_surface, (100, y_pos + 10))
+        
+        # Descripción
+        desc_surface = bullet_font.render(description, True, WHITE)
+        screen.blit(desc_surface, (100, y_pos + 35))
+        
+        # Detalles
+        details_surface = footer_font.render(details, True, WHITE)
+        screen.blit(details_surface, (WIDTH - 300, y_pos + 25))
+        
+        y_pos += 90
+
+def draw_detail_component(screen, slide, comp_type):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    y_pos = 130
+    
+    if comp_type == "hmi":
+        # Rol
+        role_surface = content_font.render(slide["role"], True, BLUE_LIGHT)
+        screen.blit(role_surface, (100, y_pos))
+        y_pos += 50
+        
+        # Características
+        for feature in slide["features"]:
+            pygame.draw.circle(screen, GREEN, (80, y_pos + 12), 6)
+            feature_surface = bullet_font.render(feature, True, BLACK)
+            screen.blit(feature_surface, (100, y_pos))
+            y_pos += 40
+        
+        # Beneficios
+        benefits_surface = content_font.render(slide["benefits"], True, GRAY)
+        screen.blit(benefits_surface, (100, y_pos + 20))
+    
+    elif comp_type == "rtu":
+        # Función
+        function_surface = content_font.render(slide["function"], True, BLUE_LIGHT)
+        screen.blit(function_surface, (100, y_pos))
+        y_pos += 50
+        
+        # Capacidades
+        for capability in slide["capabilities"]:
+            pygame.draw.circle(screen, GREEN, (80, y_pos + 12), 6)
+            capability_surface = bullet_font.render(capability, True, BLACK)
+            screen.blit(capability_surface, (100, y_pos))
+            y_pos += 40
+        
+        # Aplicaciones
+        apps_surface = content_font.render(slide["applications"], True, GRAY)
+        screen.blit(apps_surface, (100, y_pos + 20))
+    
+    elif comp_type == "plc":
+        # Propósito
+        purpose_surface = content_font.render(slide["purpose"], True, BLUE_LIGHT)
+        screen.blit(purpose_surface, (100, y_pos))
+        y_pos += 50
+        
+        # Características
+        for characteristic in slide["characteristics"]:
+            pygame.draw.circle(screen, GREEN, (80, y_pos + 12), 6)
+            char_surface = bullet_font.render(characteristic, True, BLACK)
+            screen.blit(char_surface, (100, y_pos))
+            y_pos += 40
+        
+        # Programación
+        programming_surface = content_font.render(slide["programming"], True, GRAY)
+        screen.blit(programming_surface, (100, y_pos + 20))
+
+def draw_protocols(screen, slide, protocol_type):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Protocolos
+    y_pos = 130
+    for protocol, description, details, color in slide["protocols"]:
+        # Tarjeta
+        pygame.draw.rect(screen, color, (80, y_pos, WIDTH - 160, 70), 0, 8)
+        pygame.draw.rect(screen, BLACK, (80, y_pos, WIDTH - 160, 70), 1, 8)
+        
+        # Protocolo
+        proto_surface = content_font.render(protocol, True, WHITE)
+        screen.blit(proto_surface, (100, y_pos + 10))
+        
+        # Descripción
+        desc_surface = bullet_font.render(description, True, WHITE)
+        screen.blit(desc_surface, (100, y_pos + 35))
+        
+        # Detalles
+        details_surface = footer_font.render(details, True, WHITE)
+        screen.blit(details_surface, (WIDTH - 300, y_pos + 25))
+        
+        y_pos += 90
+
+def draw_application(screen, slide, sector):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Descripción general
+    overview_surface = content_font.render(slide["overview"], True, BLUE_LIGHT)
+    screen.blit(overview_surface, (100, 120))
+    
+    # Funciones
+    y_pos = 170
+    for function in slide["functions"]:
+        pygame.draw.circle(screen, GREEN, (80, y_pos + 12), 6)
+        func_surface = bullet_font.render(function, True, BLACK)
+        screen.blit(func_surface, (100, y_pos))
+        y_pos += 40
+    
+    # Beneficios
+    benefits_surface = content_font.render(slide["benefits"], True, GREEN)
+    screen.blit(benefits_surface, (100, y_pos + 20))
+
+def draw_security(screen, slide, security_type):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    if security_type == "threats":
+        # Desafío
+        challenge_surface = content_font.render(slide["challenge"], True, RED)
+        screen.blit(challenge_surface, (100, 120))
+        
+        # Amenazas
+        y_pos = 170
+        for percentage, threat, description, color in slide["threats"]:
+            pygame.draw.rect(screen, color, (80, y_pos, WIDTH - 160, 60), 0, 8)
+            pygame.draw.rect(screen, BLACK, (80, y_pos, WIDTH - 160, 60), 1, 8)
+            
+            threat_surface = content_font.render(f"{percentage} - {threat}", True, WHITE)
+            screen.blit(threat_surface, (100, y_pos + 10))
+            
+            desc_surface = footer_font.render(description, True, WHITE)
+            screen.blit(desc_surface, (100, y_pos + 35))
+            
+            y_pos += 80
+    
+    elif security_type == "solutions":
+        # Enfoque
+        approach_surface = content_font.render(slide["approach"], True, BLUE_LIGHT)
+        screen.blit(approach_surface, (100, 120))
+        
+        # Soluciones
+        y_pos = 170
+        for solution, description, details, color in slide["solutions"]:
+            pygame.draw.rect(screen, color, (80, y_pos, WIDTH - 160, 70), 0, 8)
+            pygame.draw.rect(screen, BLACK, (80, y_pos, WIDTH - 160, 70), 1, 8)
+            
+            sol_surface = content_font.render(solution, True, WHITE)
+            screen.blit(sol_surface, (100, y_pos + 10))
+            
+            desc_surface = bullet_font.render(description, True, WHITE)
+            screen.blit(desc_surface, (100, y_pos + 35))
+            
+            details_surface = footer_font.render(details, True, WHITE)
+            screen.blit(details_surface, (WIDTH - 300, y_pos + 25))
+            
+            y_pos += 90
+
+def draw_trends(screen, slide, trend_type):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    if trend_type == "iiot":
+        # Visión
+        vision_surface = content_font.render(slide["vision"], True, BLUE_LIGHT)
+        screen.blit(vision_surface, (100, 120))
+        
+        # Innovaciones
+        y_pos = 170
+        for innovation in slide["innovations"]:
+            pygame.draw.circle(screen, GREEN, (80, y_pos + 12), 6)
+            innov_surface = bullet_font.render(innovation, True, BLACK)
+            screen.blit(innov_surface, (100, y_pos))
+            y_pos += 40
+        
+        # Impacto
+        impact_surface = content_font.render(slide["impact"], True, GRAY)
+        screen.blit(impact_surface, (100, y_pos + 20))
+    
+    elif trend_type == "ai":
+        # Aplicación
+        application_surface = content_font.render(slide["application"], True, BLUE_LIGHT)
+        screen.blit(application_surface, (100, 120))
+        
+        # Capacidades
+        y_pos = 170
+        for capability in slide["capabilities"]:
+            pygame.draw.circle(screen, GREEN, (80, y_pos + 12), 6)
+            cap_surface = bullet_font.render(capability, True, BLACK)
+            screen.blit(cap_surface, (100, y_pos))
+            y_pos += 40
+        
+        # Beneficio
+        benefit_surface = content_font.render(slide["benefit"], True, GRAY)
+        screen.blit(benefit_surface, (100, y_pos + 20))
+
+def draw_implementation(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Metodología
+    methodology_surface = content_font.render(slide["methodology"], True, BLUE_LIGHT)
+    screen.blit(methodology_surface, (100, 120))
+    
+    # Fases
+    y_pos = 170
+    for phase, description, details, color in slide["phases"]:
+        pygame.draw.rect(screen, color, (80, y_pos, WIDTH - 160, 70), 0, 8)
+        pygame.draw.rect(screen, BLACK, (80, y_pos, WIDTH - 160, 70), 1, 8)
+        
+        phase_surface = content_font.render(phase, True, WHITE)
+        screen.blit(phase_surface, (100, y_pos + 10))
+        
+        desc_surface = bullet_font.render(description, True, WHITE)
+        screen.blit(desc_surface, (100, y_pos + 35))
+        
+        details_surface = footer_font.render(details, True, WHITE)
+        screen.blit(details_surface, (WIDTH - 300, y_pos + 25))
+        
+        y_pos += 90
+
+def draw_roi(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Análisis
+    analysis_surface = content_font.render(slide["analysis"], True, BLUE_LIGHT)
+    screen.blit(analysis_surface, (100, 120))
+    
+    # Métricas
+    y_pos = 170
+    for period, roi, description, color in slide["metrics"]:
+        pygame.draw.rect(screen, color, (80, y_pos, WIDTH - 160, 70), 0, 8)
+        pygame.draw.rect(screen, BLACK, (80, y_pos, WIDTH - 160, 70), 1, 8)
+        
+        period_surface = content_font.render(period, True, WHITE)
+        screen.blit(period_surface, (100, y_pos + 10))
+        
+        roi_surface = bullet_font.render(roi, True, WHITE)
+        screen.blit(roi_surface, (100, y_pos + 35))
+        
+        desc_surface = footer_font.render(description, True, WHITE)
+        screen.blit(desc_surface, (WIDTH - 300, y_pos + 25))
+        
+        y_pos += 90
+    
+    # Conclusión
+    conclusion_surface = content_font.render(slide["conclusion"], True, GREEN)
+    screen.blit(conclusion_surface, (100, y_pos + 20))
+
+def draw_conclusion(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Puntos clave
+    y_pos = 130
+    for point in slide["key_points"]:
+        pygame.draw.circle(screen, GREEN, (80, y_pos + 12), 8)
+        point_surface = bullet_font.render(point, True, BLACK)
+        screen.blit(point_surface, (100, y_pos))
+        y_pos += 60
+    
+    # Recomendación
+    recommendation_surface = content_font.render(slide["recommendation"], True, BLUE_LIGHT)
+    screen.blit(recommendation_surface, (100, y_pos + 20))
+
+def draw_final(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = title_font.render(slide["title"], True, BLUE_DARK)
+    title_rect = title_surface.get_rect(center=(WIDTH//2, HEIGHT//3))
+    screen.blit(title_surface, title_rect)
+    
+    contact_surface = content_font.render(slide["contact"], True, GREEN)
+    contact_rect = contact_surface.get_rect(center=(WIDTH//2, HEIGHT//2))
+    screen.blit(contact_surface, contact_rect)
+    
+    footer_surface = footer_font.render(slide["footer"], True, GRAY)
+    footer_rect = footer_surface.get_rect(center=(WIDTH//2, HEIGHT - 100))
+    screen.blit(footer_surface, footer_rect)
+
+# Bucle principal COMPLETO
+def main():
+    presentation = PresentationManager()
+    clock = pygame.time.Clock()
+    
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                running = False
+            elif event.type == KEYDOWN:
+                if event.key == K_RIGHT:
+                    presentation.next_slide()
+                elif event.key == K_LEFT:
+                    presentation.prev_slide()
+                elif event.key == K_ESCAPE:
+                    running = False
+        
+        # Actualizar animaciones
+        presentation.update_animation()
+        
+        # Obtener diapositiva actual
+        current_slide = presentation.slides[presentation.current_slide]
+        slide_type = current_slide["type"]
+        
+        # Dibujar diapositiva según tipo
+        if slide_type == "cover":
+            draw_cover(screen, current_slide)
+        elif slide_type == "agenda":
+            draw_agenda(screen, current_slide)
+        elif slide_type == "definition":
+            draw_definition(screen, current_slide)
+        elif slide_type == "history":
+            draw_history(screen, current_slide, presentation.animation_progress)
+        elif slide_type == "architecture":
+            draw_architecture(screen, current_slide, presentation.animation_progress)
+        elif slide_type == "hardware":
+            draw_component_grid(screen, current_slide, "hardware")
+        elif slide_type == "software":
+            draw_component_grid(screen, current_slide, "software")
+        elif slide_type == "hmi":
+            draw_detail_component(screen, current_slide, "hmi")
+        elif slide_type == "rtu":
+            draw_detail_component(screen, current_slide, "rtu")
+        elif slide_type == "plc":
+            draw_detail_component(screen, current_slide, "plc")
+        elif slide_type == "protocols_classic":
+            draw_protocols(screen, current_slide, "classic")
+        elif slide_type == "protocols_modern":
+            draw_protocols(screen, current_slide, "modern")
+        elif slide_type == "energy":
+            draw_application(screen, current_slide, "energy")
+        elif slide_type == "water":
+            draw_application(screen, current_slide, "water")
+        elif slide_type == "manufacturing":
+            draw_application(screen, current_slide, "manufacturing")
+        elif slide_type == "security_threats":
+            draw_security(screen, current_slide, "threats")
+        elif slide_type == "security_solutions":
+            draw_security(screen, current_slide, "solutions")
+        elif slide_type == "trends_iiot":
+            draw_trends(screen, current_slide, "iiot")
+        elif slide_type == "trends_ai":
+            draw_trends(screen, current_slide, "ai")
+        elif slide_type == "implementation":
+            draw_implementation(screen, current_slide)
+        elif slide_type == "roi":
+            draw_roi(screen, current_slide)
+        elif slide_type == "conclusion":
+            draw_conclusion(screen, current_slide)
+        elif slide_type == "final":
+            draw_final(screen, current_slide)
+        
+        # Dibujar navegación
+        draw_navigation(screen, presentation.current_slide, len(presentation.slides))
+        
+        # Dibujar transición
+        presentation.transition.draw(screen)
+        
+        pygame.display.flip()
+        clock.tick(60)
+    
+    pygame.quit()
+    sys.exit()
+
+if __name__ == "__main__":
+    main()
