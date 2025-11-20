@@ -90,7 +90,7 @@ class PresentationManager:
                 "title": "Sistemas SCADA",
                 "subtitle": "Presentación Técnica Completa",
                 "section": "Introducción",
-                "author": "Alberto Fernandez y Carlos Ríos"
+                "author": "Ingeniero Industrial - 10 años experiencia"
             },
             
             # === AGENDA ===
@@ -105,7 +105,9 @@ class PresentationManager:
                     "Aplicaciones por Sector",
                     "Ciberseguridad Industrial",
                     "Tendencias y Futuro",
-                    "Implementación y ROI"
+                    "Implementación y ROI",
+                    "Configuración y Estándares",
+                    "SCADA vs DCS"
                 ]
             },
             
@@ -124,7 +126,22 @@ class PresentationManager:
                 ]
             },
             
-                        # === HISTORIA SCADA ===
+            # === NORMATIVAS Y ESTÁNDARES ===
+            {
+                "type": "standards",
+                "title": "Normativas y Estándares SCADA",
+                "section": "Marco Regulatorio",
+                "standards": [
+                    ("ISA-95", "Integración empresa-control", "Modelo de niveles Purdue", BLUE_DARK),
+                    ("IEC 62443", "Ciberseguridad industrial", "Protección sistemas SCADA", GREEN),
+                    ("IEC 61131-3", "Programación de PLCs", "Portabilidad de código", YELLOW),
+                    ("OPC UA", "Interoperabilidad", "Comunicación segura y fiable", ORANGE),
+                    ("ISA-18.2", "Gestión de alarmas", "Evitar fatiga del operador", PURPLE),
+                    ("NIST SP 800-82", "Seguridad SCADA", "Guía de implementación", CYAN)
+                ]
+            },
+            
+            # === HISTORIA SCADA ===
             {
                 "type": "history",
                 "title": "Evolución Histórica de SCADA",
@@ -161,9 +178,9 @@ class PresentationManager:
                 "components": [
                     ("Servidores SCADA", "Procesamiento central", "Alta disponibilidad", BLUE_LIGHT),
                     ("Estaciones Operador", "Interfaz HMI", "Múltiples monitores", GREEN),
-                    ("PLCs", "Control lógico programable", "Tiempo real", YELLOW),
+                    ("PLCs", "Control lógico programable", "Tiempo real IEC 61131-3", YELLOW),
                     ("RTUs", "Unidades terminales remotas", "Ubicaciones críticas", RED),
-                    ("Network Switches", "Comunicación industrial", "Redundancia", PURPLE)
+                    ("Network Switches", "Comunicación industrial IEEE 802.3", "Redundancia", PURPLE)
                 ]
             },
             
@@ -174,10 +191,10 @@ class PresentationManager:
                 "section": "Plataforma de Aplicación",
                 "components": [
                     ("Sistema Operativo", "Windows/Linux RT", "Plataforma base", BLUE_LIGHT),
-                    ("Software SCADA", "Aplicación principal", "Desarrollo personalizado", GREEN),
-                    ("Bases de Datos", "Históricos y tiempo real", "SQL, Oracle", YELLOW),
-                    ("Herramientas Desarrollo", "Editores y configuradores", "Entornos gráficos", ORANGE),
-                    ("Aplicaciones Cliente", "Visualización web/móvil", "Acceso multiplataforma", PURPLE)
+                    ("Software SCADA", "Aplicación principal OPC UA", "Desarrollo personalizado", GREEN),
+                    ("Bases de Datos", "Históricos y tiempo real", "SQL, Oracle, Timeseries", YELLOW),
+                    ("Sistema de Alarmas", "Gestión ISA-18.2", "Notificación condiciones anómalas", ORANGE),
+                    ("Herramientas Desarrollo", "Editores y configuradores", "Entornos gráficos", PURPLE)
                 ]
             },
             
@@ -186,11 +203,11 @@ class PresentationManager:
                 "type": "hmi",
                 "title": "HMI - Interfaz Hombre-Máquina",
                 "section": "Componente Clave",
-                "role": "Interfaz visual entre operadores y procesos industriales",
+                "role": "Interfaz visual entre operadores y procesos industriales - Estándar ISA-101",
                 "features": [
                     "Visualización gráfica en tiempo real de procesos completos",
                     "Control manual y automático de equipos críticos", 
-                    "Gestión inteligente de alarmas con priorización",
+                    "Gestión inteligente de alarmas con priorización ISA-18.2",
                     "Tendencias históricas y análisis comparativos",
                     "Reportes automáticos de producción y eventos"
                 ],
@@ -218,7 +235,7 @@ class PresentationManager:
                 "type": "plc",
                 "title": "PLC - Controlador Lógico Programable",
                 "section": "Componente Clave", 
-                "purpose": "Ejecución de lógica de control en tiempo real determinístico",
+                "purpose": "Ejecución de lógica de control en tiempo real determinístico - IEC 61131-3",
                 "characteristics": [
                     "Tiempo real estricto para aplicaciones críticas de seguridad",
                     "Programación bajo estándar internacional IEC 61131-3",
@@ -252,6 +269,47 @@ class PresentationManager:
                     ("EtherNet/IP", "Ethernet industrial", "Amplia adopción", CYAN),
                     ("PROFINET", "Ethernet en tiempo real", "Alto desempeño", BLUE_LIGHT),
                     ("MQTT Sparkplug", "IIoT optimizado", "Ligero, eficiente", GREEN)
+                ]
+            },
+            
+            # === CLASIFICACIÓN SISTEMAS ===
+            {
+                "type": "classification",
+                "title": "Clasificación de Sistemas SCADA",
+                "section": "Arquitecturas",
+                "systems": [
+                    ("SCADA Centralizado", "Un único servidor", "Gestión centralizada, menor costo", BLUE_LIGHT),
+                    ("SCADA Distribuido", "Múltiples servidores", "Escalable, tolerante a fallos", GREEN),
+                    ("SCADA en la Nube", "AWS IoT, Azure IIoT", "Escalabilidad y análisis avanzado", YELLOW),
+                    ("SCADA Redundante", "IEC 62439", "Alta disponibilidad en críticos", RED)
+                ]
+            },
+            
+            # === SCADA vs DCS ===
+            {
+                "type": "comparison",
+                "title": "SCADA vs DCS - Diferencias Clave",
+                "section": "Selección de Sistemas",
+                "comparison": [
+                    ("Enfoque Principal", "SCADA: Supervisión amplia", "DCS: Control en tiempo real", BLUE_LIGHT),
+                    ("Arquitectura", "SCADA: Sistemas distribuidos", "DCS: Plantas compactas", GREEN),
+                    ("Aplicación Típica", "SCADA: Agua, energía", "DCS: Química, refinerías", YELLOW),
+                    ("Integración", "SCADA: Múltiples sitios", "DCS: Planta única", ORANGE),
+                    ("Protocolos", "SCADA: Modbus, OPC UA", "DCS: Fieldbus, HART", PURPLE)
+                ]
+            },
+            
+            # === DISEÑO SCADA ===
+            {
+                "type": "design",
+                "title": "Diseño de Sistemas SCADA",
+                "section": "Mejores Prácticas",
+                "practices": [
+                    ("Diseño de Pantallas ISA-101", "Claridad y jerarquía visual", "Contexto sobre densidad", BLUE_LIGHT),
+                    ("Estructura de Tags", "Nomenclatura consistente", "Mantenibilidad", GREEN),
+                    ("Gestión de Alarmas", "Priorización ISA-18.2", "Evitar fatiga operador", YELLOW),
+                    ("Segmentación de Red", "NIST SP 800-82", "Seguridad por diseño", RED),
+                    ("Tendencias y Reportes", "Análisis histórico", "Toma de decisiones", PURPLE)
                 ]
             },
             
@@ -322,12 +380,27 @@ class PresentationManager:
                 "type": "security_solutions",
                 "title": "Ciberseguridad: Soluciones",
                 "section": "Estrategias de Protección",
-                "approach": "Defensa en profundidad para entornos OT/IT",
+                "approach": "Defensa en profundidad para entornos OT/IT - IEC 62443",
                 "solutions": [
                     ("Segmentación", "DMZ industriales y zonas", "Contención de brechas", GREEN),
                     ("Monitorización", "IDS/IPS específicos OT", "Detección temprana", BLUE_LIGHT),
                     ("Hardening", "Endurecimiento sistemas", "Reducción superficie ataque", YELLOW),
-                    ("Respuesta", "Planes recuperación", "Minimización impacto", ORANGE)
+                    ("Respuesta", "Planes recuperación", "Minimización impacto", ORANGE),
+                    ("Auditorías", "ISO/IEC 27001", "Evaluación continua", PURPLE)
+                ]
+            },
+            
+            # === SOFTWARE INDUSTRIAL ===
+            {
+                "type": "industrial_software",
+                "title": "Software SCADA Industrial",
+                "section": "Plataformas Comerciales",
+                "platforms": [
+                    ("Ignition", "Plataforma universal", "Arquitectura abierta, OPC UA", BLUE_LIGHT),
+                    ("Siemens WinCC", "Ecosistema TIA Portal", "Integración PROFINET", GREEN),
+                    ("Rockwell FactoryTalk", "Suite integrada", "EtherNet/IP nativo", YELLOW),
+                    ("Wonderware System Platform", "ArchestrA framework", "Escalabilidad empresarial", ORANGE),
+                    ("AVEVA System Platform", "Solución enterprise", "Gestión assets complejos", PURPLE)
                 ]
             },
             
@@ -393,6 +466,20 @@ class PresentationManager:
                 "conclusion": "Inversión recuperada típicamente en 18-24 meses"
             },
             
+            # === INSTITUCIONES REFERENCIA ===
+            {
+                "type": "institutions",
+                "title": "Instituciones de Referencia",
+                "section": "Estándares y Normativas",
+                "organizations": [
+                    ("ISA", "Estándares automatización y control", "ISA-95, ISA-101, ISA-18.2", BLUE_DARK),
+                    ("IEC", "Normas eléctricas y comunicación", "IEC 61131, IEC 62443", GREEN),
+                    ("NIST", "Guías ciberseguridad industrial", "NIST SP 800-82", YELLOW),
+                    ("IEEE", "Estándares redes y comunicaciones", "IEEE 802.3 Ethernet", ORANGE),
+                    ("ISO", "Estándares calidad y seguridad", "ISO/IEC 27001", PURPLE)
+                ]
+            },
+            
             # === CONCLUSIONES ===
             {
                 "type": "conclusion",
@@ -401,11 +488,11 @@ class PresentationManager:
                 "key_points": [
                     "SCADA es componente crítico para competitividad industrial moderna",
                     "La evolución hacia plataformas IIoT e inteligentes es irreversible",
-                    "La ciberseguridad debe ser considerada desde la fase de diseño",
-                    "Los beneficios operativos y económicos justifican ampliamente la inversión",
+                    "La ciberseguridad debe ser considerada desde la fase de diseño IEC 62443",
+                    "Los estándares ISA e IEC garantizan interoperabilidad y seguridad",
                     "La capacitación continua del personal es clave para el éxito operacional"
                 ],
-                "recommendation": "Adoptar arquitecturas abiertas, seguras y escalables"
+                "recommendation": "Adoptar arquitecturas abiertas, seguras y escalables con estándares"
             },
             
             # === FINAL ===
@@ -414,7 +501,7 @@ class PresentationManager:
                 "title": "¡Gracias por su Atención!",
                 "section": "Fin de Presentación",
                 "contact": "¿Preguntas o Comentarios?",
-                "footer": "Presentación SCADA Completa - Investigación Actualizada 2024"
+                "footer": "Presentación SCADA Completa - Investigación Actualizada 2024 - Basada en estándares ISA, IEC, NIST"
             }
         ]
     
@@ -517,12 +604,14 @@ def draw_history(screen, slide, progress):
     draw_background(screen, slide.get("section"))
     
     title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
-    screen.blit(title_surface, (WIDTH//2 - title_surface.get_width()//2, 70))
+    title_rect = title_surface.get_rect(center=(WIDTH//2, 70))
+    screen.blit(title_surface, title_rect)
     
     # Subtítulo evolutivo
     subtitle_text = "Sistemas Monolíticos → Primeros SCADA → Arquitecturas Distribuidas → SCADA en Red"
     subtitle_surface = content_font.render(subtitle_text, True, BLUE_LIGHT)
-    screen.blit(subtitle_surface, (WIDTH//2 - subtitle_surface.get_width()//2, 120))
+    subtitle_rect = subtitle_surface.get_rect(center=(WIDTH//2, 120))
+    screen.blit(subtitle_surface, subtitle_rect)
     
     # Línea de tiempo principal
     timeline_y = HEIGHT//2 - 50
@@ -637,6 +726,170 @@ def draw_component_grid(screen, slide, component_type):
         screen.blit(details_surface, (WIDTH - 300, y_pos + 25))
         
         y_pos += 90
+
+def draw_standards(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Estándares
+    y_pos = 130
+    for name, description, details, color in slide["standards"]:
+        # Tarjeta
+        pygame.draw.rect(screen, color, (80, y_pos, WIDTH - 160, 70), 0, 8)
+        pygame.draw.rect(screen, BLACK, (80, y_pos, WIDTH - 160, 70), 1, 8)
+        
+        # Nombre
+        name_surface = content_font.render(name, True, WHITE)
+        screen.blit(name_surface, (100, y_pos + 10))
+        
+        # Descripción
+        desc_surface = bullet_font.render(description, True, WHITE)
+        screen.blit(desc_surface, (100, y_pos + 35))
+        
+        # Detalles
+        details_surface = footer_font.render(details, True, WHITE)
+        screen.blit(details_surface, (WIDTH - 300, y_pos + 25))
+        
+        y_pos += 90
+
+def draw_classification(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Sistemas
+    y_pos = 130
+    for name, description, details, color in slide["systems"]:
+        # Tarjeta
+        pygame.draw.rect(screen, color, (80, y_pos, WIDTH - 160, 70), 0, 8)
+        pygame.draw.rect(screen, BLACK, (80, y_pos, WIDTH - 160, 70), 1, 8)
+        
+        # Nombre
+        name_surface = content_font.render(name, True, WHITE)
+        screen.blit(name_surface, (100, y_pos + 10))
+        
+        # Descripción
+        desc_surface = bullet_font.render(description, True, WHITE)
+        screen.blit(desc_surface, (100, y_pos + 35))
+        
+        # Detalles
+        details_surface = footer_font.render(details, True, WHITE)
+        screen.blit(details_surface, (WIDTH - 300, y_pos + 25))
+        
+        y_pos += 90
+
+def draw_comparison(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Comparación SCADA vs DCS
+    y_pos = 130
+    for category, scada, dcs, color in slide["comparison"]:
+        # Categoría
+        cat_surface = content_font.render(category, True, color)
+        screen.blit(cat_surface, (100, y_pos))
+        
+        # SCADA
+        scada_surface = bullet_font.render("SCADA: " + scada, True, BLACK)
+        screen.blit(scada_surface, (120, y_pos + 30))
+        
+        # DCS
+        dcs_surface = bullet_font.render("DCS: " + dcs, True, BLACK)
+        screen.blit(dcs_surface, (120, y_pos + 55))
+        
+        # Separador
+        pygame.draw.line(screen, GRAY, (100, y_pos + 85), (WIDTH - 100, y_pos + 85), 1)
+        
+        y_pos += 100
+
+def draw_design(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Prácticas de diseño
+    y_pos = 130
+    for practice, description, details, color in slide["practices"]:
+        # Tarjeta
+        pygame.draw.rect(screen, color, (80, y_pos, WIDTH - 160, 70), 0, 8)
+        pygame.draw.rect(screen, BLACK, (80, y_pos, WIDTH - 160, 70), 1, 8)
+        
+        # Práctica
+        practice_surface = content_font.render(practice, True, WHITE)
+        screen.blit(practice_surface, (100, y_pos + 10))
+        
+        # Descripción
+        desc_surface = bullet_font.render(description, True, WHITE)
+        screen.blit(desc_surface, (100, y_pos + 35))
+        
+        # Detalles
+        details_surface = footer_font.render(details, True, WHITE)
+        screen.blit(details_surface, (WIDTH - 300, y_pos + 25))
+        
+        y_pos += 90
+
+def draw_industrial_software(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Plataformas
+    y_pos = 130
+    for name, description, details, color in slide["platforms"]:
+        # Tarjeta
+        pygame.draw.rect(screen, color, (80, y_pos, WIDTH - 160, 70), 0, 8)
+        pygame.draw.rect(screen, BLACK, (80, y_pos, WIDTH - 160, 70), 1, 8)
+        
+        # Nombre
+        name_surface = content_font.render(name, True, WHITE)
+        screen.blit(name_surface, (100, y_pos + 10))
+        
+        # Descripción
+        desc_surface = bullet_font.render(description, True, WHITE)
+        screen.blit(desc_surface, (100, y_pos + 35))
+        
+        # Detalles
+        details_surface = footer_font.render(details, True, WHITE)
+        screen.blit(details_surface, (WIDTH - 300, y_pos + 25))
+        
+        y_pos += 90
+
+def draw_institutions(screen, slide):
+    draw_background(screen, slide.get("section"))
+    
+    title_surface = slide_title_font.render(slide["title"], True, BLUE_DARK)
+    screen.blit(title_surface, (80, 70))
+    
+    # Instituciones
+    y_pos = 130
+    for name, description, standards, color in slide["organizations"]:
+        # Tarjeta
+        pygame.draw.rect(screen, color, (80, y_pos, WIDTH - 160, 70), 0, 8)
+        pygame.draw.rect(screen, BLACK, (80, y_pos, WIDTH - 160, 70), 1, 8)
+        
+        # Nombre
+        name_surface = content_font.render(name, True, WHITE)
+        screen.blit(name_surface, (100, y_pos + 10))
+        
+        # Descripción
+        desc_surface = bullet_font.render(description, True, WHITE)
+        screen.blit(desc_surface, (100, y_pos + 35))
+        
+        # Estándares
+        standards_surface = footer_font.render(standards, True, WHITE)
+        screen.blit(standards_surface, (WIDTH - 300, y_pos + 25))
+        
+        y_pos += 90
+
+# Las demás funciones existentes (draw_detail_component, draw_protocols, draw_application, draw_security, draw_trends, etc.)
+# se mantienen igual, solo necesitas añadir las nuevas funciones anteriores
 
 def draw_detail_component(screen, slide, comp_type):
     draw_background(screen, slide.get("section"))
@@ -924,7 +1177,7 @@ def draw_final(screen, slide):
     footer_rect = footer_surface.get_rect(center=(WIDTH//2, HEIGHT - 100))
     screen.blit(footer_surface, footer_rect)
 
-# Bucle principal COMPLETO
+# Bucle principal ACTUALIZADO
 def main():
     presentation = PresentationManager()
     clock = pygame.time.Clock()
@@ -956,6 +1209,8 @@ def main():
             draw_agenda(screen, current_slide)
         elif slide_type == "definition":
             draw_definition(screen, current_slide)
+        elif slide_type == "standards":
+            draw_standards(screen, current_slide)
         elif slide_type == "history":
             draw_history(screen, current_slide, presentation.animation_progress)
         elif slide_type == "architecture":
@@ -974,6 +1229,12 @@ def main():
             draw_protocols(screen, current_slide, "classic")
         elif slide_type == "protocols_modern":
             draw_protocols(screen, current_slide, "modern")
+        elif slide_type == "classification":
+            draw_classification(screen, current_slide)
+        elif slide_type == "comparison":
+            draw_comparison(screen, current_slide)
+        elif slide_type == "design":
+            draw_design(screen, current_slide)
         elif slide_type == "energy":
             draw_application(screen, current_slide, "energy")
         elif slide_type == "water":
@@ -984,6 +1245,8 @@ def main():
             draw_security(screen, current_slide, "threats")
         elif slide_type == "security_solutions":
             draw_security(screen, current_slide, "solutions")
+        elif slide_type == "industrial_software":
+            draw_industrial_software(screen, current_slide)
         elif slide_type == "trends_iiot":
             draw_trends(screen, current_slide, "iiot")
         elif slide_type == "trends_ai":
@@ -992,6 +1255,8 @@ def main():
             draw_implementation(screen, current_slide)
         elif slide_type == "roi":
             draw_roi(screen, current_slide)
+        elif slide_type == "institutions":
+            draw_institutions(screen, current_slide)
         elif slide_type == "conclusion":
             draw_conclusion(screen, current_slide)
         elif slide_type == "final":
